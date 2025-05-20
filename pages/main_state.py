@@ -5,7 +5,10 @@ import routes
 from city import City
 
 INITIAL_STATE = {
-    "url": {"href": routes.CITIES},
+    "url": {
+        "href": routes.CITIES,
+        "base": "",
+    },
     "cities": [],
 }
 
