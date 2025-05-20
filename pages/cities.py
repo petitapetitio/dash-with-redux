@@ -3,10 +3,9 @@ from dash import register_page, html, Dash, Input, Output, State
 
 import pages.main_state as main
 import routes
-from client import Client
 
 
-def register_page_cities(app: Dash, cities_client: Client):
+def register_page_cities(app: Dash):
     register_page(
         "cities",
         path=routes.CITIES,
@@ -30,20 +29,6 @@ def register_page_cities(app: Dash, cities_client: Client):
             return dash.no_update
 
         return main.reduce(main_state, main.Action.SET_URL, routes.CITY)
-
-    @app.callback(
-        Output("main-state", "data", allow_duplicate=True),
-        Input("url", "href"),
-        State("main-state", "data"),
-        prevent_initial_call=True,
-    )
-    def on_page_load(href: str, state: dict):
-        if not href.endswith(routes.CITIES):
-            return dash.no_update
-
-        print("cities:on_page_load", href)
-        cities = cities_client.get_cities()
-        return state
 
     @app.callback(
         Output("cities-array", "children"),

@@ -1,10 +1,9 @@
 from dash import register_page, html, dcc, Output, Input, State, dash
 
+import pages.main_state as main
 import routes
 from city import City
-from client import Client
 from pages.city_state import INITIAL_STATE, reduce, Action
-import pages.main_state as main
 
 CITIES_BY_COUNTRY = {
     "France": ["Paris", "Lyon", "Marseille"],
@@ -13,7 +12,7 @@ CITIES_BY_COUNTRY = {
 }
 
 
-def register_page_city(app, cities_client: Client):
+def register_page_city(app):
     register_page(
         "city",
         path=routes.CITY,
