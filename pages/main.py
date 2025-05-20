@@ -24,11 +24,10 @@ def register_main(app: Dash):
         if href == state["url"]["href"]:
             return dash.no_update
 
-        print("!! on_page_load")
         return reduce(state, Action.SET_URL, href)
 
     @app.callback(
-        Output("url", "href"),
+        Output("url", "href", allow_duplicate=True),
         Input("main-state", "data"),
         prevent_initial_call=True,
     )
