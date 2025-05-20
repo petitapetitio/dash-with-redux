@@ -16,4 +16,9 @@ def create_app() -> Dash:
 
 
 if __name__ == "__main__":
+    import logging
+
+    logger = logging.getLogger("werkzeug")
+    logger.setLevel(logging.ERROR)
+
     create_app().run(debug=False)

@@ -12,7 +12,11 @@ table {
 }
 
 form > *, button {
-    margin: 8px;
+    margin: 4px;
+}
+
+th, td {
+    padding: 4px;
 }
 
 table tr:not(:last-child) {

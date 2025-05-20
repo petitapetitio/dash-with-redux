@@ -34,9 +34,13 @@ class Action(Enum):
 def reduce(state: dict, action: Action, payload=None) -> dict:
     print("reduce", action, payload, state)
     if action == Action.SELECT_COUNTRY:
-        cities = CITIES_BY_COUNTRY[payload]
+        country = payload
+        if country == state["country"]:
+            return state
+
+        cities = CITIES_BY_COUNTRY[country]
         return state | {
-            "country": payload,
+            "country": country,
             "city-dropdown": {
                 "options": [{"label": city, "value": city} for city in cities],
                 "value": None,

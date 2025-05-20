@@ -1,3 +1,5 @@
+import urllib.parse
+
 from dash import register_page, html, dcc, Output, Input, State, dash
 
 import pages.main_state as main
@@ -37,6 +39,10 @@ def register_page_city(app):
                             clearable=False,
                         ),
                         dcc.Input(
+                            id="comment-input",
+                            placeholder="Free comment",
+                        ),
+                        dcc.Input(
                             id="population-input",
                             placeholder="Population",
                             pattern=r"\d*"
@@ -45,7 +51,7 @@ def register_page_city(app):
                 ),
                 html.Button(
                     "Visualize",
-                    id="submit-button",
+                    id="visualize-button",
                     className="mt-3",
                     disabled=True,
                 ),
@@ -67,6 +73,9 @@ def register_page_city(app):
         prevent_initial_call=True,
     )
     def on_select_country(selected_country, state: dict):
+        if selected_country is None:
+            return dash.no_update
+
         return reduce(state, Action.SELECT_COUNTRY, selected_country)
 
     @app.callback(
@@ -95,12 +104,25 @@ def register_page_city(app):
 
     @app.callback(
         Output("main-state", "data", allow_duplicate=True),
+        Input("visualize-button", "n_clicks"),
+        State("city-state", "data"),
+        State("main-state", "data"),
+        prevent_initial_call=True,
+    )
+    def on_click_visualize(n_clicks: int | None, state: dict, main_state: dict):
+        if n_clicks is None:
+            return dash.no_update
+
+        return main_state
+
+    @app.callback(
+        Output("main-state", "data", allow_duplicate=True),
         Input("submit-button", "n_clicks"),
         State("city-state", "data"),
         State("main-state", "data"),
         prevent_initial_call=True,
     )
-    def on_click_submit_form(n_clicks: int | None, state: dict, main_state: dict):
+    def on_click_submit(n_clicks: int | None, state: dict, main_state: dict):
         if n_clicks is None:
             return dash.no_update
 
@@ -121,9 +143,35 @@ def register_page_city(app):
         return main_state
 
     @app.callback(
+        Output("city-state", "data"),
+        Input("url", "href"),
+        State("city-state", "data"),
+        State("main-state", "data"),
+        prevent_initial_call=True,
+    )
+    def on_page_load(href: str, state: dict, main_state: dict):
+        url = urllib.parse.urlparse(href)
+        if url.path != routes.CITY:
+            return dash.no_update
+
+        if url.query == "":
+            return dash.no_update
+
+        print("city:on_page_load")
+        index = int(url.query.split("index=")[1])
+        city = main_state["cities"][index]
+
+        state = reduce(state, Action.SELECT_COUNTRY, city["country"])
+        state = reduce(state, Action.SELECT_CITY, city["name"])
+        state = reduce(state, Action.SET_POPULATION, city["population"])
+        return state
+
+    @app.callback(
+        Output("country-dropdown", "value"),
         Output("city-dropdown", "options"),
         Output("city-dropdown", "value"),
         Output("city-dropdown", "disabled"),
+        Output("population-input", "value"),
         Output("submit-button", "disabled"),
         Output("result-output", "children"),
         Input("city-state", "data"),
@@ -131,9 +179,11 @@ def register_page_city(app):
     def on_update_state(state: dict):
         print("city:on_update_state")
         return (
+            state["country"],
             state["city-dropdown"]["options"],
             state["city-dropdown"]["value"],
             state["city-dropdown"]["disabled"],
+            state["population"],
             state["submit-button"]["disabled"],
             state["result"],  # TODO : plot on "visualize"
         )
