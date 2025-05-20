@@ -11,6 +11,7 @@ INITIAL_STATE = {
         "value": None,
         "disabled": True,
     },
+    "population": None,
     "submit-button": {
         "disabled": True,
     },
@@ -27,7 +28,7 @@ CITIES_BY_COUNTRY = {
 class Action(Enum):
     SELECT_COUNTRY = auto()
     SELECT_CITY = auto()
-    VISUALIZE_CITY = auto()
+    SET_POPULATION = auto()
 
 
 def reduce(state: dict, action: Action, payload=None) -> dict:
@@ -52,9 +53,10 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
                 "disabled": False,
             },
         }
-    if action == Action.VISUALIZE_CITY:
+
+    if action == Action.SET_POPULATION:
         return state | {
-            "result": f"You selected {state['city-dropdown']['value']}, {state['country']}."
+            "population": payload
         }
 
     raise NotImplementedError(f"Reducer for {action} isn't implemented.")

@@ -22,7 +22,6 @@ def register_page_city(app):
                 html.H1("Select Location", className="mb-4"),
                 html.Form(
                     [
-                        html.Label("Country"),
                         dcc.Dropdown(
                             id="country-dropdown",
                             options=[
@@ -31,13 +30,17 @@ def register_page_city(app):
                             placeholder="Select a country",
                             clearable=False,
                         ),
-                        html.Label("City"),
                         dcc.Dropdown(
                             id="city-dropdown",
                             placeholder="Select a city",
                             disabled=True,
                             clearable=False,
                         ),
+                        dcc.Input(
+                            id="population-input",
+                            placeholder="Population",
+                            pattern=r"\d*"
+                        )
                     ]
                 ),
                 html.Button(
@@ -79,6 +82,24 @@ def register_page_city(app):
         return reduce(state, Action.SELECT_CITY, selected_city)
 
     @app.callback(
+        Output("city-state", "data", allow_duplicate=True),
+        Input("population-input", "value"),
+        State("city-state", "data"),
+        prevent_initial_call=True,
+    )
+    def on_enter_population(population: str | None, state: dict):
+        if population is None:
+            return dash.no_update
+
+        try:
+            population = int(population)
+        except ValueError:
+            # TODO : TOAST
+            return dash.no_update
+
+        return reduce(state, Action.SET_POPULATION, population)
+
+    @app.callback(
         Output("main-state", "data", allow_duplicate=True),
         Input("submit-button", "n_clicks"),
         State("city-state", "data"),
@@ -92,9 +113,8 @@ def register_page_city(app):
         city = City(
             name=state["city-dropdown"]["value"],
             country=state["country"],
-            population=100,
+            population=state["population"],
         )
-        cities_client.add_city(city)
 
         main_state = main.reduce(main_state, main.Action.ADD_CITY, city)
         main_state = main.reduce(main_state, main.Action.SET_URL, routes.CITIES)

@@ -3,6 +3,7 @@ from dash import register_page, html, Dash, Input, Output, State
 
 import pages.main_state as main
 import routes
+from city import City
 
 
 def register_page_cities(app: Dash):
@@ -48,13 +49,14 @@ def register_page_cities(app: Dash):
                 ]
             )
         ]
-        for city in state["cities"]:
+        for city_json in state["cities"]:
+            city = City.from_dict(city_json)
             rows.append(
                 html.Tr(
                     [
-                        html.Td(city["country"]),
-                        html.Td(city["name"]),
-                        html.Td(city["population"], style={"text-align": "right"}),
+                        html.Td(city.country),
+                        html.Td(city.name),
+                        html.Td(city.population, style={"text-align": "right"}),
                     ]
                 )
             )

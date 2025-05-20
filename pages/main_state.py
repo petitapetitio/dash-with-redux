@@ -36,6 +36,6 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
 
     if action == Action.ADD_CITY:
         city: City = payload
-        return state | {"cities": state["cities"] + [city.to_json()]}
+        return state | {"cities": state["cities"] + [city.to_dict()]}
 
     raise NotImplementedError(f"Reducer for {action} isn't implemented.")
