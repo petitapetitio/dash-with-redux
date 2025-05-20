@@ -10,4 +10,3 @@ class City:
 
     def to_json(self) -> dict:
         return asdict(self)
-

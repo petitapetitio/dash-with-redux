@@ -3,6 +3,7 @@
 
 - name callbacks after the event
 
+- composable actions
 
 
 ## dash will complain about circular dependency. It is not.
@@ -19,3 +20,45 @@
 
         print("!! on_page_load")
         return reduce(state, Action.SET_URL, href)
+
+## Common mistakes
+
+Forgetting `prevent_initial_call=True` on the main downstream callback.
+
+```python
+    @app.callback(
+        Output("url", "href"),
+        Input("main-state", "data"),
+        prevent_initial_call=True,
+    )
+    def on_state_updated(state: dict):
+        print("main:on_state_updated", state)
+        return state["url"]["href"]
+```
+
+Using an in-memory store instead of a session store (for the main state)
+
+Updating with the path only (instead of the full url).
+
+Mixer Button(href=...) et state["url"]["href"].
+
+## Location in the state or not
+
+- advantages : homogènité
+- points de vigilance
+- inconvénients 
+  - callback for each url
+  - you cannot navigate through direct url then (this is in facts very inconvenient)
+
+## Benefits
+
+- Testability
+- Clear intent (actions are focused and express the intent)
+- Simplify form validation and the logic associated to user feedbacks
+- Decouple the state from the layout
+
+Dash recommended approach is fine for prototypes.
+
+When the app get richer, you may want to use this pattern to keep the logic clear.
+
+If you know from start you are building a rich app, you may want to start with another technology from the beginning.

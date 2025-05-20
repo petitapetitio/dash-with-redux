@@ -2,12 +2,17 @@ import urllib.parse
 from enum import Enum, auto
 
 import routes
+from city import City
 
-INITIAL_STATE = {"url": {"href": routes.CITIES}}
+INITIAL_STATE = {
+    "url": {"href": routes.CITIES},
+    "cities": [],
+}
 
 
 class Action(Enum):
     SET_URL = auto()
+    ADD_CITY = auto()
 
 
 def reduce(state: dict, action: Action, payload=None) -> dict:
@@ -25,4 +30,9 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
                 "base": f"{url.scheme}://{url.netloc}",
             }
         }
+
+    if action == Action.ADD_CITY:
+        city: City = payload
+        return state | {"cities": state["cities"] + [city.to_json()]}
+
     raise NotImplementedError(f"Reducer for {action} isn't implemented.")

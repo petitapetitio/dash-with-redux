@@ -1,15 +1,14 @@
 import dash
-from dash import register_page, html, Dash, Input, Output, dcc, State
+from dash import register_page, html, Dash, Input, Output, State
 
-import routes
-from pages.cities_state import INITIAL_STATE
 import pages.main_state as main
+import routes
 
 
 def register_page_cities(app: Dash):
     register_page(
         "cities",
-        path="/",
+        path=routes.CITIES,
         layout=html.Div(
             [
                 html.H1("Cities"),

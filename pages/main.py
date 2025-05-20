@@ -18,7 +18,7 @@ def register_main(app: Dash):
     @app.callback(
         Output("main-state", "data"),
         Input("url", "href"),
-        State("main-state", "data")
+        State("main-state", "data"),
     )
     def on_page_load(href: str, state: dict):
         if href == state["url"]["href"]:
@@ -32,6 +32,6 @@ def register_main(app: Dash):
         Input("main-state", "data"),
         prevent_initial_call=True,
     )
-    def on_state_updated(state: dict):
-        print("main:on_state_updated", state)
+    def on_update_state(state: dict):
+        print("main:on_update_state", state)
         return state["url"]["href"]
