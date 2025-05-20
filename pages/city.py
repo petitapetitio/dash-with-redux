@@ -41,11 +41,13 @@ def register_page_city(app):
                         dcc.Input(
                             id="comment-input",
                             placeholder="Free comment",
+                            debounce=100,
                         ),
                         dcc.Input(
                             id="population-input",
                             placeholder="Population",
-                            pattern=r"\d*"
+                            pattern=r"\d*",
+                            debounce=100,
                         )
                     ]
                 ),
@@ -92,6 +94,18 @@ def register_page_city(app):
 
     @app.callback(
         Output("city-state", "data", allow_duplicate=True),
+        Input("comment-input", "value"),
+        State("city-state", "data"),
+        prevent_initial_call=True,
+    )
+    def on_type_comment(comment: str | None, state: dict):
+        if comment is None:
+            return dash.no_update
+
+        return reduce(state, Action.SET_COMMENT, comment)
+
+    @app.callback(
+        Output("city-state", "data", allow_duplicate=True),
         Input("population-input", "value"),
         State("city-state", "data"),
         prevent_initial_call=True,
@@ -135,6 +149,7 @@ def register_page_city(app):
             name=state["city-dropdown"]["value"],
             country=state["country"],
             population=population,
+            comment=state["comment"],
         )
 
         main_state = main.reduce(main_state, main.Action.ADD_CITY, city)
@@ -164,6 +179,7 @@ def register_page_city(app):
         state = reduce(state, Action.SELECT_COUNTRY, city["country"])
         state = reduce(state, Action.SELECT_CITY, city["name"])
         state = reduce(state, Action.SET_POPULATION, city["population"])
+        state = reduce(state, Action.SET_COMMENT, city["comment"])
         return state
 
     @app.callback(
@@ -172,6 +188,7 @@ def register_page_city(app):
         Output("city-dropdown", "value"),
         Output("city-dropdown", "disabled"),
         Output("population-input", "value"),
+        Output("comment-input", "value"),
         Output("submit-button", "disabled"),
         Output("result-output", "children"),
         Input("city-state", "data"),
@@ -184,6 +201,7 @@ def register_page_city(app):
             state["city-dropdown"]["value"],
             state["city-dropdown"]["disabled"],
             state["population"],
+            state["comment"],
             state["submit-button"]["disabled"],
             state["result"],  # TODO : plot on "visualize"
         )

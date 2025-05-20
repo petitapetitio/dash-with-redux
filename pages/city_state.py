@@ -1,10 +1,6 @@
 from enum import Enum, auto
 
 INITIAL_STATE = {
-    # DISPLAY_RESULT needs to know the selected country.
-    # It's easy to persist the value provided by Action.SELECT_COUNTRY
-    # No need to mirror the country-dropdown component structure in this case
-    # because it's a one-way flow (we don't use this state value to update the component)
     "country": None,
     "city-dropdown": {
         "options": [],
@@ -12,6 +8,7 @@ INITIAL_STATE = {
         "disabled": True,
     },
     "population": None,
+    "comment": "",
     "submit-button": {
         "disabled": True,
     },
@@ -29,6 +26,7 @@ class Action(Enum):
     SELECT_COUNTRY = auto()
     SELECT_CITY = auto()
     SET_POPULATION = auto()
+    SET_COMMENT = auto()
 
 
 def reduce(state: dict, action: Action, payload=None) -> dict:
@@ -61,6 +59,11 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
     if action == Action.SET_POPULATION:
         return state | {
             "population": payload
+        }
+
+    if action == Action.SET_COMMENT:
+        return state | {
+            "comment": payload
         }
 
     raise NotImplementedError(f"Reducer for {action} isn't implemented.")

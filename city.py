@@ -8,6 +8,7 @@ class City:
     name: str
     country: str
     population: int
+    comment: str
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -18,4 +19,5 @@ class City:
             name=json["name"],
             country=json["country"],
             population=json["population"],
+            comment=json["comment"],
         )
