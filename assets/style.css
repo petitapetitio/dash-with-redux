@@ -1,6 +1,7 @@
 
 body {
     margin: 0;
+    text-align: center;
 }
 
 #page-container {
@@ -9,4 +10,15 @@ body {
     height: 100vh;
     align-items: center;
     justify-content: center;
+}
+
+table {
+    width: 300px;
+    text-align: left;
+    margin: 32px;
+    border-collapse: collapse;
+}
+
+table tr:not(:last-child) {
+    border-bottom: 1px black solid
 }

@@ -2,6 +2,7 @@ from dash import register_page, html, dcc, Output, Input, State, dash
 
 import routes
 from city import City
+from client import Client
 from pages.city_state import INITIAL_STATE, reduce, Action
 import pages.main_state as main
 
@@ -12,7 +13,7 @@ CITIES_BY_COUNTRY = {
 }
 
 
-def register_page_city(app):
+def register_page_city(app, cities_client: Client):
     register_page(
         "city",
         path=routes.CITY,
@@ -38,19 +39,19 @@ def register_page_city(app):
                             disabled=True,
                             clearable=False,
                         ),
-                        html.Button(
-                            "Visualize",
-                            id="submit-button",
-                            className="mt-3",
-                            disabled=True,
-                        ),
-                        html.Button(
-                            "Submit",
-                            id="submit-button",
-                            className="mt-3",
-                            disabled=True,
-                        ),
                     ]
+                ),
+                html.Button(
+                    "Visualize",
+                    id="submit-button",
+                    className="mt-3",
+                    disabled=True,
+                ),
+                html.Button(
+                    "Submit",
+                    id="submit-button",
+                    className="mt-3",
+                    disabled=True,
                 ),
                 html.Div(id="result-output"),
             ]
@@ -92,8 +93,10 @@ def register_page_city(app):
         city = City(
             name=state["city-dropdown"]["value"],
             country=state["country"],
-            population_evolution=tuple(),
+            population=100,
         )
+        cities_client.add_city(city)
+
         main_state = main.reduce(main_state, main.Action.ADD_CITY, city)
         main_state = main.reduce(main_state, main.Action.SET_URL, routes.CITIES)
         return main_state

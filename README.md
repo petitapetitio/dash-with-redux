@@ -29,10 +29,22 @@ Forgetting `prevent_initial_call=True` on the main downstream callback.
     @app.callback(
         Output("url", "href"),
         Input("main-state", "data"),
-        prevent_initial_call=True,
+        prevent_initial_call=True,  # <-- HERE
     )
     def on_state_updated(state: dict):
-        print("main:on_state_updated", state)
+        return state["url"]["href"]
+```
+
+Forgetting ` allow_duplicate=True` for `Output("url", "href")` on the main downstream callback.
+
+```python
+    @app.callback(
+        Output("url", "href", allow_duplicate=True),  # <-- HERE
+        Input("main-state", "data"),
+        State("main-state", "modified_timestamp"),
+        prevent_initial_call=True,
+    )
+    def on_update_state(state: dict, ts):
         return state["url"]["href"]
 ```
 

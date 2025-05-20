@@ -6,7 +6,7 @@ from datetime import date
 class City:
     name: str
     country: str
-    population_evolution: tuple[tuple[date, int], ...]
+    population: int
 
     def to_json(self) -> dict:
         return asdict(self)
