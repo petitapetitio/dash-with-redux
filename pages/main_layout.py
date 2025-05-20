@@ -11,9 +11,21 @@ def register_main(app: Dash):
             dcc.Location(id="url", refresh=True),
             dcc.Store(id="main-state", storage_type="session", data=INITIAL_STATE),
             html.Div(dash.page_container, id="page-container"),
-            # TODO : ajouter le toast
+            html.Div(id="toast", children="YOUPI", style={"opacity": 0}),
         ]
     )
+
+    @app.callback(
+        Output("main-state", "data", allow_duplicate=True),
+        Input("toast", "n_clicks"),
+        State("main-state", "data"),
+        prevent_initial_call=True,
+    )
+    def on_click_toast(n: str | None, state: dict):
+        if n is None:
+            return dash.no_update
+
+        return reduce(state, Action.CLOSE_TOAST)
 
     @app.callback(
         Output("main-state", "data"),
@@ -28,9 +40,15 @@ def register_main(app: Dash):
 
     @app.callback(
         Output("url", "href", allow_duplicate=True),
+        Output("toast", "style"),
+        Output("toast", "children"),
         Input("main-state", "data"),
         prevent_initial_call=True,
     )
     def on_update_state(state: dict):
         print("main:on_update_state", state)
-        return state["url"]["href"]
+        return (
+            state["url"]["href"],
+            {"opacity": 1} if state["toast"]["visible"] else {"opacity": 0},
+            state["toast"]["content"]
+        )

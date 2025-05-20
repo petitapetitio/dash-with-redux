@@ -10,12 +10,19 @@ INITIAL_STATE = {
         "base": "",
     },
     "cities": [],
+    "toast": {
+        "visible": False,
+        "content": "",
+    },
 }
 
 
 class Action(Enum):
     SET_URL = auto()
     ADD_CITY = auto()
+
+    OPEN_TOAST = auto()
+    CLOSE_TOAST = auto()
 
 
 def reduce(state: dict, action: Action, payload=None) -> dict:
@@ -37,5 +44,22 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
     if action == Action.ADD_CITY:
         city: City = payload
         return state | {"cities": state["cities"] + [city.to_dict()]}
+
+    if action == Action.OPEN_TOAST:
+        return state | {
+            "toast": {
+                "visible": True,
+                "content": payload,
+            },
+        }
+
+    if action == Action.CLOSE_TOAST:
+
+        return state | {
+            "toast": {
+                "visible": False,
+                "content": "",
+            },
+        }
 
     raise NotImplementedError(f"Reducer for {action} isn't implemented.")

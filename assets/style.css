@@ -4,14 +4,6 @@ body {
     text-align: center;
 }
 
-#page-container {
-    display: flex;
-    align-content: center;
-    height: 100vh;
-    align-items: center;
-    justify-content: center;
-}
-
 table {
     width: 300px;
     text-align: left;
@@ -26,3 +18,26 @@ form > *, button {
 table tr:not(:last-child) {
     border-bottom: 1px black solid
 }
+
+#page-container {
+    display: flex;
+    align-content: center;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+#toast {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 200px;
+    background-color: darkorange;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    transition: opacity 1s;
+    padding: 16px;
+ }

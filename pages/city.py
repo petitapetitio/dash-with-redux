@@ -91,12 +91,6 @@ def register_page_city(app):
         if population is None:
             return dash.no_update
 
-        try:
-            population = int(population)
-        except ValueError:
-            # TODO : TOAST
-            return dash.no_update
-
         return reduce(state, Action.SET_POPULATION, population)
 
     @app.callback(
@@ -110,13 +104,19 @@ def register_page_city(app):
         if n_clicks is None:
             return dash.no_update
 
+        try:
+            population = int(state["population"])
+        except ValueError:
+            return main.reduce(main_state, main.Action.OPEN_TOAST, "Population should be a sequence of digits")
+
         city = City(
             name=state["city-dropdown"]["value"],
             country=state["country"],
-            population=state["population"],
+            population=population,
         )
 
         main_state = main.reduce(main_state, main.Action.ADD_CITY, city)
+        main_state = main.reduce(main_state, main.Action.CLOSE_TOAST, city)
         main_state = main.reduce(main_state, main.Action.SET_URL, routes.CITIES)
         return main_state
 
