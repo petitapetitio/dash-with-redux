@@ -11,7 +11,7 @@ def register_main(app: Dash):
             dcc.Location(id="url", refresh=True),
             dcc.Store(id="main-state", storage_type="session", data=INITIAL_STATE),
             html.Div(dash.page_container, id="page-container"),
-            html.Div(id="toast", children="YOUPI", style={"opacity": 0}),
+            html.Div(id="toast", children="", style={"opacity": 0}),
         ]
     )
 
