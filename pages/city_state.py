@@ -7,7 +7,7 @@ INITIAL_STATE = {
         "value": None,
         "disabled": True,
     },
-    "population": None,
+    "population": "",
     "comment": "",
     "submit-button": {
         "disabled": True,

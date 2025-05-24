@@ -41,13 +41,15 @@ def register_page_city(app):
                         dcc.Input(
                             id="comment-input",
                             placeholder="Free comment",
-                            debounce=100,
+                            value=INITIAL_STATE["comment"],
+                            debounce=0.5,
                         ),
                         dcc.Input(
                             id="population-input",
                             placeholder="Population",
+                            value=INITIAL_STATE["population"],
                             pattern=r"\d*",
-                            debounce=100,
+                            debounce=0.5,
                         )
                     ]
                 ),
@@ -75,7 +77,7 @@ def register_page_city(app):
         prevent_initial_call=True,
     )
     def on_select_country(selected_country, state: dict):
-        if selected_country is None:
+        if selected_country == state["country"]:
             return dash.no_update
 
         return reduce(state, Action.SELECT_COUNTRY, selected_country)
@@ -87,7 +89,7 @@ def register_page_city(app):
         prevent_initial_call=True,
     )
     def on_select_city(selected_city: str | None, state: dict):
-        if selected_city is None:
+        if selected_city == state["city-dropdown"]["value"]:
             return dash.no_update
 
         return reduce(state, Action.SELECT_CITY, selected_city)
@@ -98,8 +100,8 @@ def register_page_city(app):
         State("city-state", "data"),
         prevent_initial_call=True,
     )
-    def on_type_comment(comment: str | None, state: dict):
-        if comment is None:
+    def on_type_comment(comment: str, state: dict):
+        if comment == state["comment"]:
             return dash.no_update
 
         return reduce(state, Action.SET_COMMENT, comment)
@@ -110,8 +112,8 @@ def register_page_city(app):
         State("city-state", "data"),
         prevent_initial_call=True,
     )
-    def on_enter_population(population: str | None, state: dict):
-        if population is None:
+    def on_enter_population(population: str, state: dict):
+        if population == state["population"]:
             return dash.no_update
 
         return reduce(state, Action.SET_POPULATION, population)
