@@ -50,5 +50,5 @@ def register_main(app: Dash):
         return (
             state["url"]["href"],
             {"opacity": 1} if state["toast"]["visible"] else {"opacity": 0},
-            state["toast"]["content"]
+            state["toast"]["content"],
         )

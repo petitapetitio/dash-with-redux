@@ -12,6 +12,9 @@ INITIAL_STATE = {
     "submit-button": {
         "disabled": True,
     },
+    "visualize-button": {
+        "disabled": True,
+    },
     "result": "",
 }
 
@@ -54,16 +57,15 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
             "submit-button": {
                 "disabled": False,
             },
+            "visualize-button": {
+                "disabled": False,
+            },
         }
 
     if action == Action.SET_POPULATION:
-        return state | {
-            "population": payload
-        }
+        return state | {"population": payload}
 
     if action == Action.SET_COMMENT:
-        return state | {
-            "comment": payload
-        }
+        return state | {"comment": payload}
 
     raise NotImplementedError(f"Reducer for {action} isn't implemented.")

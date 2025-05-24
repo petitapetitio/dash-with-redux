@@ -1,5 +1,9 @@
 import urllib.parse
+from datetime import timedelta, datetime
+from random import random
+from typing import Tuple
 
+import plotly.graph_objs as go
 from dash import register_page, html, dcc, Output, Input, State, dash
 
 import pages.main_state as main
@@ -26,9 +30,7 @@ def register_page_city(app):
                     [
                         dcc.Dropdown(
                             id="country-dropdown",
-                            options=[
-                                {"label": c, "value": c} for c in CITIES_BY_COUNTRY
-                            ],
+                            options=[{"label": c, "value": c} for c in CITIES_BY_COUNTRY],
                             placeholder="Select a country",
                             clearable=False,
                         ),
@@ -50,7 +52,7 @@ def register_page_city(app):
                             value=INITIAL_STATE["population"],
                             pattern=r"\d*",
                             debounce=0.5,
-                        )
+                        ),
                     ]
                 ),
                 html.Button(
@@ -65,7 +67,7 @@ def register_page_city(app):
                     className="mt-3",
                     disabled=True,
                 ),
-                html.Div(id="result-output"),
+                dcc.Loading(html.Div(id="visualization-div")),
             ]
         ),
     )
@@ -119,17 +121,22 @@ def register_page_city(app):
         return reduce(state, Action.SET_POPULATION, population)
 
     @app.callback(
-        Output("main-state", "data", allow_duplicate=True),
+        Output("visualization-div", "children"),
         Input("visualize-button", "n_clicks"),
-        State("city-state", "data"),
-        State("main-state", "data"),
         prevent_initial_call=True,
     )
-    def on_click_visualize(n_clicks: int | None, state: dict, main_state: dict):
+    def on_click_visualize(n_clicks: int | None):
         if n_clicks is None:
             return dash.no_update
 
-        return main_state
+        n = 1_000_000
+        xs, ys = _fake_air_quality_over_time_data(n)
+
+        fig = go.Figure(data=[go.Scatter(x=xs, y=ys)])
+        fig.update_layout(margin=dict(l=20, r=20, t=20, b=20))
+        fig.update_xaxes(title="Date")
+        fig.update_yaxes(title="Air quality")
+        return dcc.Graph(figure=fig)
 
     @app.callback(
         Output("main-state", "data", allow_duplicate=True),
@@ -145,7 +152,11 @@ def register_page_city(app):
         try:
             population = int(state["population"])
         except ValueError:
-            return main.reduce(main_state, main.Action.OPEN_TOAST, "Population should be a sequence of digits")
+            return main.reduce(
+                main_state,
+                main.Action.OPEN_TOAST,
+                "Population should be a sequence of digits",
+            )
 
         city = City(
             name=state["city-dropdown"]["value"],
@@ -192,7 +203,7 @@ def register_page_city(app):
         Output("population-input", "value"),
         Output("comment-input", "value"),
         Output("submit-button", "disabled"),
-        Output("result-output", "children"),
+        Output("visualize-button", "disabled"),
         Input("city-state", "data"),
     )
     def on_update_state(state: dict):
@@ -205,5 +216,18 @@ def register_page_city(app):
             state["population"],
             state["comment"],
             state["submit-button"]["disabled"],
-            state["result"],  # TODO : plot on "visualize"
+            state["visualize-button"]["disabled"],
         )
+
+
+def _fake_air_quality_over_time_data(n) -> Tuple[list[datetime], list[float]]:
+    t0 = datetime.now()
+    t0.replace(minute=0, second=0, microsecond=0)
+    xs = [t0 - timedelta(hours=i) for i in range(n)]
+
+    ys: list[float] = [0] * n
+    ys[0] = random()
+    for i in range(1, n):
+        ys[i] = ys[i - 1] + random() - 0.5
+
+    return xs, ys

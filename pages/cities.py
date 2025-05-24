@@ -71,7 +71,10 @@ def register_page_cities(app: Dash):
                         html.Td(city.country),
                         html.Td(city.name),
                         html.Td(city.population, style={"text-align": "right"}),
-                        html.Td(html.Button("EDIT", id={"type": "edit-city-btn", "index": i}), style={"text-align": "right"})
+                        html.Td(
+                            html.Button("EDIT", id={"type": "edit-city-btn", "index": i}),
+                            style={"text-align": "right"},
+                        ),
                     ]
                 )
             )
