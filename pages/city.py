@@ -23,7 +23,8 @@ def register_page_city(app):
         "city",
         path=routes.CITY,
         layout=html.Div(
-            [
+            id="city-layout",
+            children=[
                 dcc.Store(id="city-state", data=INITIAL_STATE),
                 html.H1("Select Location", className="mb-4"),
                 html.Form(
@@ -172,20 +173,16 @@ def register_page_city(app):
 
     @app.callback(
         Output("city-state", "data"),
-        Input("url", "href"),
+        Input("city-layout", "children"),
+        State("url", "href"),
         State("city-state", "data"),
         State("main-state", "data"),
-        prevent_initial_call=True,
     )
-    def on_page_load(href: str, state: dict, main_state: dict):
+    def on_page_load(_, href: str, state: dict, main_state: dict):
         url = urllib.parse.urlparse(href)
-        if url.path != routes.CITY:
-            return dash.no_update
-
         if url.query == "":
             return dash.no_update
 
-        print("city:on_page_load")
         index = int(url.query.split("index=")[1])
         city = main_state["cities"][index]
 
