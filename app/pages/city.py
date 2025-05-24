@@ -183,8 +183,8 @@ def register_page_city(app):
         if url.query == "":
             return dash.no_update
 
-        index = int(url.query.split("index=")[1])
-        city = main_state["cities"][index]
+        city_id = int(url.query.split("id=")[1])
+        city = main_state["cities"][city_id]
 
         state = reduce(state, Action.SELECT_COUNTRY, city["country"])
         state = reduce(state, Action.SELECT_CITY, city["name"])

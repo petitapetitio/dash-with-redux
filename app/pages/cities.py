@@ -33,7 +33,7 @@ def register_page_cities(app: Dash):
 
     @app.callback(
         Output("main-state", "data", allow_duplicate=True),
-        Input({"type": "edit-city-btn", "index": ALL}, "n_clicks"),
+        Input({"type": "edit-city-btn", "id": ALL}, "n_clicks"),
         State("main-state", "data"),
         prevent_initial_call=True,
     )
@@ -41,8 +41,8 @@ def register_page_cities(app: Dash):
         if not any(buttons):
             return dash.no_update
 
-        city_index = dash.ctx.triggered_id["index"]
-        return main.reduce(state, main.Action.SET_URL, routes.CITY + f"?index={city_index}")
+        city_id = dash.ctx.triggered_id["id"]
+        return main.reduce(state, main.Action.SET_URL, routes.CITY + f"?id={city_id}")
 
     @app.callback(
         Output("cities-array", "children"),
@@ -71,7 +71,7 @@ def register_page_cities(app: Dash):
                         html.Td(city.name),
                         html.Td(city.population, style={"text-align": "right"}),
                         html.Td(
-                            html.Button("EDIT", id={"type": "edit-city-btn", "index": i}),
+                            html.Button("EDIT", id={"type": "edit-city-btn", "id": i}),
                             style={"text-align": "right"},
                         ),
                     ]
