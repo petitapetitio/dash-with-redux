@@ -1,8 +1,8 @@
 import urllib.parse
 from enum import Enum, auto
 
-import routes
-from city import City
+from app import routes
+from app.city import City
 
 INITIAL_STATE = {
     "url": {

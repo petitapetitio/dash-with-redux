@@ -1,17 +1,6 @@
-TODO :
-- remove "result" et les TODO
-- on page load (give an id to the page layout and take children as input)
-
-
 Guidelines / remarks
-- debouncing
 - name callbacks after the event
-- compose actions
-- inconvénients : pas de toast
-- imrove consistency
-- improve the story (use case, ...)
-- remove classes like "mb-4"
-
+- ask gpt to improve the story (use case, ...)
 + avoid global states, allows dependency injection in each pages
 
 ## dash will complain about circular dependency. It is not.
@@ -62,23 +51,11 @@ Updating with the path only (instead of the full url).
 
 Mixer Button(href=...) et state["url"]["href"].
 
-## Location in the state or not
-
-- advantages : homogènité
-- points de vigilance
-- inconvénients 
-  - callback for each url
-  - you cannot navigate through direct url then (this is in facts very inconvenient)
 
 ## Benefits
 
-- Testability
-- Clear intent (actions are focused and express the intent)
-- Simplify form validation and the logic associated to user feedbacks
-- Decouple the state from the layout
-
-Dash recommended approach is fine for prototypes.
-
-When the app get richer, you may want to use this pattern to keep the logic clear.
+Simplify form validation and the logic associated to user feedbacks
 
 If you know from start you are building a rich app, you may want to start with another technology from the beginning.
+
+I'm very open to change my mind. and please prove me I'm wrong. But if find it lacks building custom components easily.

@@ -1,9 +1,9 @@
 import dash
 from dash import register_page, html, Dash, Input, Output, State, ALL
 
-import pages.main_state as main
-import routes
-from city import City
+import app.pages.main_state as main
+from app import routes
+from app.city import City
 
 
 def register_page_cities(app: Dash):

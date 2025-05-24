@@ -6,10 +6,10 @@ from typing import Tuple
 import plotly.graph_objs as go
 from dash import register_page, html, dcc, Output, Input, State, dash
 
-import pages.main_state as main
-import routes
-from city import City
-from pages.city_state import INITIAL_STATE, reduce, Action, CITIES_BY_COUNTRY
+import app.pages.main_state as main
+from app import routes
+from app.city import City
+from app.pages.city_state import INITIAL_STATE, reduce, Action, CITIES_BY_COUNTRY
 
 
 def register_page_city(app):

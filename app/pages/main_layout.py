@@ -1,7 +1,7 @@
 import dash
 from dash import Dash, html, dcc, Output, Input, State
 
-from pages.main_state import INITIAL_STATE, reduce, Action
+from app.pages.main_state import INITIAL_STATE, reduce, Action
 
 
 def register_main(app: Dash):
