@@ -25,9 +25,7 @@ def register_page_city(app):
                     [
                         dcc.Dropdown(
                             id="country-dropdown",
-                            options=[
-                                {"label": c, "value": c} for c in CITIES_BY_COUNTRY
-                            ],
+                            options=[{"label": c, "value": c} for c in CITIES_BY_COUNTRY],
                             value=INITIAL_STATE["country"],
                             placeholder="Select a country",
                             clearable=False,
@@ -53,11 +51,24 @@ def register_page_city(app):
                             pattern=r"\d*",
                             debounce=0.5,
                         ),
+                        html.Button(
+                            "Visualize",
+                            id="visualize-button",
+                            disabled=True,
+                            type="button",
+                        ),
+                        html.Button(
+                            "Submit",
+                            id="submit-button",
+                            disabled=True,
+                            type="button",
+                        ),
                     ]
                 ),
-                html.Button("Visualize", id="visualize-button", disabled=True),
-                html.Button("Submit", id="submit-button", disabled=True),
-                dcc.Loading(html.Div(id="visualization-div")),
+                dcc.Loading(
+                    html.Div(id="visualization-div"),
+                    style={"margin-top": "64px"},
+                ),
             ],
         ),
     )
