@@ -30,7 +30,7 @@ class Action(Enum):
 
 
 def reduce(state: dict, action: Action, payload=None) -> dict:
-    print("reduce", action, payload, state)
+    print("city:reduce", action, payload)
     if action == Action.SELECT_COUNTRY:
         country = payload
         if country == state["country"]:
