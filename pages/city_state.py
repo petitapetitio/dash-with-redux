@@ -15,7 +15,6 @@ INITIAL_STATE = {
     "visualize-button": {
         "disabled": True,
     },
-    "result": "",
 }
 
 CITIES_BY_COUNTRY = {

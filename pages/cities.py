@@ -49,7 +49,6 @@ def register_page_cities(app: Dash):
         Input("main-state", "data"),
     )
     def on_state_updated(state: dict):
-        print("cities:on_state_updated", state)
         if len(state["cities"]) == 0:
             return ""
 

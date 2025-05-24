@@ -1,10 +1,18 @@
+TODO :
+- remove "result" et les TODO
+- on page load (give an id to the page layout and take children as input)
 
-- évolution de la population
 
+Guidelines / remarks
+- debouncing
 - name callbacks after the event
+- compose actions
+- inconvénients : pas de toast
+- imrove consistency
+- improve the story (use case, ...)
+- remove classes like "mb-4"
 
-- composable actions
-
++ avoid global states, allows dependency injection in each pages
 
 ## dash will complain about circular dependency. It is not.
 

@@ -11,7 +11,11 @@ def register_main(app: Dash):
             dcc.Location(id="url", refresh=True),
             dcc.Store(id="main-state", storage_type="session", data=INITIAL_STATE),
             html.Div(dash.page_container, id="page-container"),
-            html.Div(id="toast", children="", style={"opacity": 0}),
+            html.Div(
+                id="toast",
+                children=INITIAL_STATE["toast"]["content"],
+                style={"opacity": 0},
+            ),
         ]
     )
 
@@ -46,7 +50,6 @@ def register_main(app: Dash):
         prevent_initial_call=True,
     )
     def on_update_state(state: dict):
-        print("main:on_update_state", state)
         return (
             state["url"]["href"],
             {"opacity": 1} if state["toast"]["visible"] else {"opacity": 0},

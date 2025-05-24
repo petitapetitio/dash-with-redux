@@ -26,7 +26,6 @@ class Action(Enum):
 
 
 def reduce(state: dict, action: Action, payload=None) -> dict:
-    print("main:reduce", action, payload, state)
     if action == Action.SET_URL:
         href: str = payload
         if href.startswith("/"):

@@ -9,13 +9,7 @@ from dash import register_page, html, dcc, Output, Input, State, dash
 import pages.main_state as main
 import routes
 from city import City
-from pages.city_state import INITIAL_STATE, reduce, Action
-
-CITIES_BY_COUNTRY = {
-    "France": ["Paris", "Lyon", "Marseille"],
-    "USA": ["New York", "Los Angeles", "Chicago"],
-    "Japan": ["Tokyo", "Kyoto", "Osaka"],
-}
+from pages.city_state import INITIAL_STATE, reduce, Action, CITIES_BY_COUNTRY
 
 
 def register_page_city(app):
@@ -26,19 +20,24 @@ def register_page_city(app):
             id="city-layout",
             children=[
                 dcc.Store(id="city-state", data=INITIAL_STATE),
-                html.H1("Select Location", className="mb-4"),
+                html.H1("Add a new city to tracking"),
                 html.Form(
                     [
                         dcc.Dropdown(
                             id="country-dropdown",
-                            options=[{"label": c, "value": c} for c in CITIES_BY_COUNTRY],
+                            options=[
+                                {"label": c, "value": c} for c in CITIES_BY_COUNTRY
+                            ],
+                            value=INITIAL_STATE["country"],
                             placeholder="Select a country",
                             clearable=False,
                         ),
                         dcc.Dropdown(
                             id="city-dropdown",
                             placeholder="Select a city",
-                            disabled=True,
+                            options=INITIAL_STATE["city-dropdown"]["options"],
+                            value=INITIAL_STATE["city-dropdown"]["value"],
+                            disabled=INITIAL_STATE["city-dropdown"]["disabled"],
                             clearable=False,
                         ),
                         dcc.Input(
@@ -56,20 +55,10 @@ def register_page_city(app):
                         ),
                     ]
                 ),
-                html.Button(
-                    "Visualize",
-                    id="visualize-button",
-                    className="mt-3",
-                    disabled=True,
-                ),
-                html.Button(
-                    "Submit",
-                    id="submit-button",
-                    className="mt-3",
-                    disabled=True,
-                ),
+                html.Button("Visualize", id="visualize-button", disabled=True),
+                html.Button("Submit", id="submit-button", disabled=True),
                 dcc.Loading(html.Div(id="visualization-div")),
-            ]
+            ],
         ),
     )
 
@@ -204,7 +193,6 @@ def register_page_city(app):
         Input("city-state", "data"),
     )
     def on_update_state(state: dict):
-        print("city:on_update_state")
         return (
             state["country"],
             state["city-dropdown"]["options"],
