@@ -166,7 +166,12 @@ def register_page_city(app):
             comment=state["comment"],
         )
 
-        main_state = main.reduce(main_state, main.Action.ADD_CITY, city)
+        city_id = state["city_id"]
+        if city_id is not None:
+            main_state = main.reduce(main_state, main.Action.SAVE_CITY, {"city": city, "city_id": city_id})
+        else:
+            main_state = main.reduce(main_state, main.Action.ADD_CITY, city)
+
         main_state = main.reduce(main_state, main.Action.CLOSE_TOAST, city)
         main_state = main.reduce(main_state, main.Action.SET_URL, routes.CITIES)
         return main_state
@@ -181,11 +186,12 @@ def register_page_city(app):
     def on_page_load(_, href: str, state: dict, main_state: dict):
         url = urllib.parse.urlparse(href)
         if url.query == "":
-            return dash.no_update
+            return reduce(state, Action.SET_CITY_ID, None)
 
         city_id = int(url.query.split("id=")[1])
         city = main_state["cities"][city_id]
 
+        state = reduce(state, Action.SET_CITY_ID, city_id)
         state = reduce(state, Action.SELECT_COUNTRY, city["country"])
         state = reduce(state, Action.SELECT_CITY, city["name"])
         state = reduce(state, Action.SET_POPULATION, city["population"])

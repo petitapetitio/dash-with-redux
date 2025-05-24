@@ -20,6 +20,7 @@ INITIAL_STATE = {
 class Action(Enum):
     SET_URL = auto()
     ADD_CITY = auto()
+    SAVE_CITY = auto()
 
     OPEN_TOAST = auto()
     CLOSE_TOAST = auto()
@@ -43,6 +44,12 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
     if action == Action.ADD_CITY:
         city: City = payload
         return state | {"cities": state["cities"] + [city.to_dict()]}
+
+    if action == Action.SAVE_CITY:
+        city: City = payload["city"]
+        city_index = payload["city_id"]
+        cities = state["cities"][:city_index] + [city.to_dict()] + state["cities"][city_index+1:]
+        return state | {"cities": cities}
 
     if action == Action.OPEN_TOAST:
         return state | {

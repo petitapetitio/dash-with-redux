@@ -7,6 +7,7 @@ INITIAL_STATE = {
         "value": None,
         "disabled": True,
     },
+    "city-id": None,
     "population": "",
     "comment": "",
     "submit-button": {
@@ -25,6 +26,7 @@ CITIES_BY_COUNTRY = {
 
 
 class Action(Enum):
+    SET_CITY_ID = auto()
     SELECT_COUNTRY = auto()
     SELECT_CITY = auto()
     SET_POPULATION = auto()
@@ -59,6 +61,9 @@ def reduce(state: dict, action: Action, payload=None) -> dict:
                 "disabled": False,
             },
         }
+
+    if action == Action.SET_CITY_ID:
+        return state | {"city_id": payload}
 
     if action == Action.SET_POPULATION:
         return state | {"population": payload}
